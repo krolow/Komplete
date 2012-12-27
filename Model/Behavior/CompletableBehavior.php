@@ -1,5 +1,19 @@
 <?php
-
+/**
+* Completable Behavior
+*
+* PHP 5.3
+*
+*
+* Licensed under The MIT License
+* Redistributions of files must retain the above copyright notice.
+*
+* @version       0.1
+* @link          https://github.com/krolow/Komplete
+* @package       Komplete.Model.Behavior.CompletableBehavior
+* @author        Vinícius Krolow <krolow@gmail.com>
+* @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+*/
 class CompletableBehavior extends ModelBehavior {
     
 
@@ -18,6 +32,15 @@ class CompletableBehavior extends ModelBehavior {
         $this->settings[$model->alias] = $config;
     }
 
+    /**
+     * beforeSave is called before a model is saved.  Returning false from a beforeSave callback
+     * will abort the save operation.
+     *
+     * @param Model $model Model using this behavior
+     * 
+     * @return mixed False if the operation should abort. Any other result will continue.
+     * @access  public
+     */
     public function beforeSave(Model $model, $created) {
         $separator = $this->settings[$model->alias]['separator'];
         
@@ -34,7 +57,17 @@ class CompletableBehavior extends ModelBehavior {
         return true;
     }
 
-    protected function insertDataInModel($model, $relation, $processed)
+    /**
+     * Insert the data inside the model
+     * 
+     * @param Model  $model  Model using this behavior
+     * @param string $relation  The relation to insert data
+     * @param string $processed  The keyword proccessed
+     * 
+     * @return  array
+     * @access  protected
+     */
+    protected function insertDataInModel(Model $model, $relation, $processed)
     {
         if (is_string($processed)) {
             $assocs = $model->getAssociated();
@@ -52,7 +85,17 @@ class CompletableBehavior extends ModelBehavior {
         return $model->data;
     }
 
-    protected function processKeywords($model, $relation, $value) {
+    /**
+     * Normalize the given keyword
+     * 
+     * @param Model  $model  Model using this behavior
+     * @param string $relation  The relation to insert data
+     * @param string $value  The given config of the relation
+     * 
+     * @return  array
+     * @access  protected
+     */
+    protected function processKeywords(Model $model, $relation, $value) {
         $keyword = $model->data[$model->alias][$relation];
         if (!isset($value['multiple']) || $value['multiple'] == false) {
             return $this->processSingleKeywordRelation($model, $relation, $keyword);
@@ -61,6 +104,16 @@ class CompletableBehavior extends ModelBehavior {
         return $this->processMultipleKeywordRelation($model, $relation, $keyword);
     }
 
+    /**
+     * Normalize when it is a single keyword
+     * 
+     * @param Model  $model  Model using this behavior
+     * @param string $relation  The relation to insert data
+     * @param string $keyword  The given config of the relation
+     * 
+     * @return  array
+     * @access  protected
+     */    
     protected function processSingleKeywordRelation(Model $model, $relation, $keyword) {
         $value = trim($keyword);
         $keyword = $this->getKeyword($model, $relation, $value);
@@ -72,6 +125,16 @@ class CompletableBehavior extends ModelBehavior {
         return $keyword[$relation][$model->{$relation}->primaryKey];
     }
 
+    /**
+     * Normalize when it is a single keyword
+     * 
+     * @param Model  $model  Model using this behavior
+     * @param string $relation  The relation to insert data
+     * @param string $keyword  The given config of the relation
+     * 
+     * @return  array
+     * @access  protected
+     */  
     protected function processMultipleKeywordRelation(Model $model, $relation, $keyword) {
         $keywords = explode(', ', $keyword);
 
@@ -84,8 +147,18 @@ class CompletableBehavior extends ModelBehavior {
 
         return $dataToSave;
     }
-
-    protected function getKeyword($model, $relation, $keyword)
+    
+    /**
+     * Look for at database for the given keyword
+     * 
+     * @param Model  $model  Model using this behavior
+     * @param string $relation  The relation to insert data
+     * @param string $keyword  The given config of the relation
+     * 
+     * @return  array
+     * @access  protected
+     */  
+    protected function getKeyword(Model $model, $relation, $keyword)
     {
         return $model->{$relation}->find(
             'first',
@@ -97,9 +170,18 @@ class CompletableBehavior extends ModelBehavior {
         );
     }
 
+    /**
+     * Inser the given keyword at database
+     * 
+     * @param Model  $model  Model using this behavior
+     * @param string $relation  The relation to insert data
+     * @param string $keyword  The given config of the relation
+     * 
+     * @return  midex
+     * @access  protected
+     */  
     protected function addKeyword($model, $relation, $keyword)
     {
-
         $toSave = array(
             $relation => array(
                 $this->getSearchFieldOfRelation($model, $relation) => $keyword
@@ -109,12 +191,22 @@ class CompletableBehavior extends ModelBehavior {
         return $model->{$relation}->save($toSave);
     }
 
-    public function search(Model $model, $relation, $term) {
+    /**
+     * Search for the existence of the given keyword
+     * 
+     * @param Model  $model  Model using this behavior
+     * @param string $relation  The relation to insert data
+     * @param string $keyword  The given config of the relation
+     * 
+     * @return  array
+     * @access  protected
+     */  
+    public function search(Model $model, $relation, $keyword) {
         $data = $model->{$relation}->find(
             'list',
             array(
                 'conditions' => array(
-                    $this->getSearchFieldOfRelation($model, $relation) . ' LIKE ' => '%' . $term . '%'
+                    $this->getSearchFieldOfRelation($model, $relation) . ' LIKE ' => '%' . $keyword . '%'
                 )
             )
         );
@@ -127,6 +219,15 @@ class CompletableBehavior extends ModelBehavior {
         return $options;        
     }
 
+    /**
+     * Retrive what is the search field for the given keyword
+     * 
+     * @param Model  $model  Model using this behavior
+     * @param string $relation  The relation to insert data
+     * 
+     * @return  string
+     * @access  protected
+     */
     protected function getSearchFieldOfRelation(Model $model, $relation) {
         return $this->settings[$model->alias]['relations'][$relation]['field'];
     }
