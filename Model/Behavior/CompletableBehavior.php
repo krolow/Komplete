@@ -199,7 +199,7 @@ class CompletableBehavior extends ModelBehavior {
      * @param string $keyword  The given config of the relation
      * 
      * @return  array
-     * @access  protected
+     * @access  public
      */  
     public function search(Model $model, $relation, $keyword) {
         $data = $model->{$relation}->find(
