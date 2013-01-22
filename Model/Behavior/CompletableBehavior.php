@@ -188,8 +188,11 @@ class CompletableBehavior extends ModelBehavior {
             )
         );
 
+        $model->{$relation}->create();
         $data = $model->{$relation}->save($toSave);
         $data[$relation][$model->{$relation}->primaryKey] = $model->{$relation}->getLastInsertId();
+        
+        return $data;
     }
 
     /**
