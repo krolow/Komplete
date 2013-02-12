@@ -41,10 +41,14 @@ class CompletableBehavior extends ModelBehavior {
      * @return mixed False if the operation should abort. Any other result will continue.
      * @access  public
      */
-    public function beforeSave(Model $model, $created) {
+    public function beforeSave(Model $model) {
         $separator = $this->settings[$model->alias]['separator'];
         
         foreach ($this->settings[$model->alias]['relations'] as $relation => $value) {
+            if (!isset($model->data[$model->alias][$relation])) {
+                continue;
+            }
+
             $model->set(
                 $this->insertDataInModel(
                     $model,
@@ -52,6 +56,7 @@ class CompletableBehavior extends ModelBehavior {
                     $this->processKeywords($model, $relation, $value)
                 )
             );
+
         }
 
         return true;
@@ -69,10 +74,10 @@ class CompletableBehavior extends ModelBehavior {
      */
     protected function insertDataInModel(Model $model, $relation, $processed)
     {
+        unset($model->data[$model->alias][$relation]);
         if (is_string($processed)) {
             $assocs = $model->getAssociated();
             $foreignKey = ($model->{$assocs[$relation]}[$relation]['foreignKey']);
-            unset($model->data[$model->alias][$relation]);
             $model->data[$model->alias][$foreignKey] = $processed;
 
             return $model->data;
@@ -139,12 +144,11 @@ class CompletableBehavior extends ModelBehavior {
         $keywords = explode(', ', $keyword);
 
         $dataToSave = array();
-
         foreach ($keywords as $keyword) {
             $key = $this->processSingleKeywordRelation($model, $relation, $keyword);
-            $dataToSave[$key] = $key;
+            $dataToSave[] = $key;
         }
-
+        
         return $dataToSave;
     }
     
