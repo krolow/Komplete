@@ -31,7 +31,7 @@ It provides to you one controller action that answer as json the autocomplete fu
 * Performs update/insert
 * Performs the relationship between data
 * Works with multiple data
-* Works with sngle data
+* Works with single data
 
 ### Import data
 
