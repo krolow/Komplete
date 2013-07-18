@@ -1,5 +1,5 @@
 {
-	"name": "cobaia/Komplete",
+	"name": "cobaia/komplete",
 	"description": "CakePHP 2.0 Plugin that aims to make easily the autocomplete fuctionality.",
 	"type": "cakephp-plugin",
 	"keywords": ["cakephp", "complete", "auto-complete", "import", "komplete"],
