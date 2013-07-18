@@ -1,4 +1,4 @@
-# Komplete
+# Komplete [![Build Status](https://travis-ci.org/krolow/Komplete.png?branch=develop)](https://travis-ci.org/krolow/Komplete)
 
 
 CakePHP 2.0 Plugin that aims to make easily the autocomplete fuctionality
