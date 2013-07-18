@@ -1,5 +1,6 @@
 <?php
 class Event extends CakeTestModel {
+
 	public $useTable = 'events';
 
 	public $actsAs = array(
@@ -59,7 +60,11 @@ class EventTechnology extends CakeTestModel {
 }
 
 class CompletableBehaviorTest extends CakeTestCase {
-	
+
+/**
+ * Fixtures in use
+ * 
+ */
 	public $fixtures = array(
 		'plugin.komplete.city',
 		'plugin.komplete.event',
@@ -67,7 +72,11 @@ class CompletableBehaviorTest extends CakeTestCase {
 		'plugin.komplete.event_technology'
 	);
 
-
+/**
+ * startTest
+ * 
+ * @return void
+ */
 	public function startTest($method) {
 		$this->Event = ClassRegistry::init('Event');
 		$this->Technology = ClassRegistry::init('Technology');
@@ -75,6 +84,11 @@ class CompletableBehaviorTest extends CakeTestCase {
 		$this->City = ClassRegistry::init('City');
 	}
 
+/**
+ * Test save single
+ * 
+ * @return void
+ */
 	public function testSaveSingle() {
 		$data = array(
 			'Event' => array(
@@ -133,6 +147,11 @@ class CompletableBehaviorTest extends CakeTestCase {
 		$this->assertEqual($result, $expected);
 	}
 
+/**
+ * Test save multiple
+ * 
+ * @return void
+ */
 	public function testSaveMultiple() {
 		$data = array(
 			'Event' => array(
@@ -189,6 +208,11 @@ class CompletableBehaviorTest extends CakeTestCase {
 		$this->assertEqual(count($result['Technology']), 1);
 	}
 
+/**
+ * Test save single and multiple
+ * 
+ * @return void
+ */
 	public function testSaveSingleAndMultiple() {
 		$data = array(
 			'Event' => array(
@@ -214,9 +238,14 @@ class CompletableBehaviorTest extends CakeTestCase {
 		$this->Event->save($data);
 		$result = $this->Event->findByName($data['Event']['name']);
 		$this->assertEqual($result['City']['name'], $data['Event']['City']);
-		$this->assertEqual(count($result['Technology']), 1);	
+		$this->assertEqual(count($result['Technology']), 1);
 	}
 
+/**
+ * endTest
+ * 
+ * @return void
+ */
 	public function endTest($method) {
 		ClassRegistry::flush();
 		unset($this->Event);
