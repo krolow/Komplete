@@ -18,17 +18,20 @@ CakePHP 2.0 Plugin that aims to make easily the autocomplete fuctionality
 
 ### Autocomplete functionality
 
-Several times you want to make one input autcomplete, for the front-end side we have a lot of solutions that works pretty well, but in the back-end side we have always to code that feature.
+Several times you want to make one input autcomplete, for the front-end side we have serveral solutions that works pretty well, but in the back-end side we have always to code that feature.
 
-Komplete aims to try allow you to not code anymore this boring part of back-end side.
+Komplete aims to make plug and play the autocomplete featurein the back-end side.
 
-It provides to you one controller action that answer as json the autocomplete functionality.
 
-And it's also provide to you a way to you save the data that it's comming from this autocomplete field.
+#### How?
 
-It will helps you in the task to looking for in database to see if the data that is comming already exists case not it will insert to you, also it will define to you the relations in your model.
+It provides to you one controller action that answer as json the autocomplete functionality, and one behavior to save the data tha comes from the input field.
 
-It works to multiple keywords or single keywords
+* It look for existent data
+* Performs update/insert
+* Performs the relationship between data
+* Works with multiple data
+* Works with single data
 
 ### Import data
 
