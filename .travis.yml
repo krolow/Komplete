@@ -1,0 +1,36 @@
+language: php
+ 
+php:
+  - 5.3
+  - 5.4
+ 
+before_script:
+  - git clone --depth 1 git://github.com/cakephp/cakephp ../cakephp && cd ../cakephp
+  - sh -c "mysql -e 'CREATE DATABASE cakephp_test;'"
+  - cp -R ../Komplete app/Plugin/Komplete
+  - chmod -R 777 ../cakephp/app/tmp
+  - echo "<?php
+      class DATABASE_CONFIG {
+      public \$default = array(
+        'datasource' => 'Database/Mysql',
+        'persistent' => false,
+        'host' => '0.0.0.0',
+        'login' => 'root',
+        'password' => '',
+        'database' => 'cakephp_test',
+        'prefix' => ''
+      );
+      public \$test = array(
+        'datasource' => 'Database/Mysql',
+        'persistent' => false,
+        'host' => '0.0.0.0',
+        'login' => 'root',
+        'password' => '',
+        'database' => 'cakephp_test',
+        'prefix' => '',
+        'encoding' => 'utf8'
+      );
+      }" > ./app/Config/database.php
+ 
+script:
+  - ./app/Console/cake test Komplete Model/Behavior/CompletableBehavior
